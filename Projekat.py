@@ -37,7 +37,7 @@ print("Zidovi", matZidoviKorisnik)"""
 # def prikaziMatricu
 
 # Trenutni igrac, True igra X, false igra O
-trenutniIgrac = True
+trenutniIgrac = False
 
 # Startne koordinate pesaka
 startX1 = tuple()
@@ -113,15 +113,6 @@ def unosPocetnihParametara(
     print(matPolja)
     matZidovi = matZ
     print(matZidovi)
-
-
-"""unosPocetnihParametara(4, 5, 10, (1, 1), (1, 2))
-print(X1, X2, O1, O2)
-print(brVertikalnihZidovaX)
-print(matPolja)
-print(matZidovi)
-print(len(matPolja))"""
-
 
 def testGame(
     pozicijePesakaX: list,
@@ -293,9 +284,22 @@ def proveriPutDiagonalnoDoleLevo(trenutnaPozicija: tuple) -> bool:
     else:
         return True
 
+def proveriKrajIgre(trenutnaPozicija: tuple)->bool:
+    #True je X
+    if(trenutniIgrac==True):
+        if(trenutnaPozicija==startO1 or trenutnaPozicija==startO2):
+            return True
+    #False je Y
+    if(trenutniIgrac==False): 
+        if(trenutnaPozicija==startX1 or trenutnaPozicija==startX2):
+            return True
+    return False
+
+    #vraca True ako jeste
+
 
 #           X1      X2        O1      O2
-testGame([(0, 3), (2, 1)], [(2, 2), (1, 3)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)], [])
+testGame([(0, 3), (2, 1)], [(2, 2), (1, 2)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)], [])
 """#Prosledjuje se po jedna koordinata
     pozicijeHZidovaX: list,
     pozicijeVZidovaX: list,
@@ -320,6 +324,7 @@ print(proveriPutNadesno(O2))
 print(proveriPutNadole(O2))
 print(proveriPutNalevo(O2))
 print(proveriPutNagore(O2))
+print(proveriKrajIgre(O2))
 
 
 # prosledjujemo samo tuple od koordinate na koju zelimo da pomerimo
