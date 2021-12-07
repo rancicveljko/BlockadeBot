@@ -36,6 +36,9 @@ print("Polja", matPolja)
 print("Zidovi", matZidoviKorisnik)"""
 # def prikaziMatricu
 
+# Trenutni igrac, True igra X, false igra O
+trenutniIgrac = True
+
 # Startne koordinate pesaka
 startX1 = tuple()
 startX2 = tuple()
@@ -57,6 +60,7 @@ matPolja = []
 matZidovi = []
 
 # na osnovu X1 i X2 se postavljaju O1 i O2 simetricno
+# Na krajevima uspraviti zidove 
 def unosPocetnihParametara(
     n: int, m: int, maxZidova: int, X1Start: tuple(), X2Start: tuple()
 ):
@@ -172,8 +176,118 @@ def testGame(
         # +2 jer su naredni red -, pa tek onda idu |
         matZidovi[pozicijeVZidovaO[i][0] + 2][pozicijeVZidovaO[i][1]] = chr(0x01C1)
 
+def proveriPutNagore(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    if (matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "=") or (
+        matZidovi[2 * trenutnaPozicija[0] - 2][trenutnaPozicija[1]] == "="
+    ):
+        return False
+    else:
+        return True
 
-testGame([(0, 3), (2, 1)], [(2, 2), (1, 2)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)], [])
+
+def proveriPutNadole(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    if (matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "=") or (
+        matZidovi[2 * trenutnaPozicija[0] + 4][trenutnaPozicija[1]] == "="
+    ):
+        return False
+    else:
+        return True
+
+
+def proveriPutNadesno(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    if (
+        matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1)
+    ) or (
+        matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 2] == chr(0x01C1)
+    ):
+        return False
+    else:
+        return True
+
+
+# chr(0x01C1) je || samo kao 1 char
+
+
+def proveriPutNalevo(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1)) or (
+        matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] - 1] == chr(0x01C1)
+    ):
+        return False
+    else:
+        return True
+
+
+def proveriPutDiagonalnoDoleDesno(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    brZidova = 0
+    if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "=":
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1] + 1] == "=":
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 3][trenutnaPozicija[1] + 1] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if brZidova >= 2:
+        return False
+    else:
+        return True
+
+def proveriPutDiagonalnoGoreDesno(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    brZidova = 0
+    if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "=":
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] - 1][trenutnaPozicija[1] + 1] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1] + 1] == "=":
+        brZidova = brZidova + 1
+    if brZidova >= 2:
+        return False
+    else:
+        return True
+
+
+def proveriPutDiagonalnoGoreLevo(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    brZidova = 0
+    if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "=":
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1] - 1] == "=":
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] - 1][trenutnaPozicija[1]] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if brZidova >= 2:
+        return False
+    else:
+        return True
+
+def proveriPutDiagonalnoDoleLevo(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    brZidova = 0
+    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "=":
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1] - 1] == "=":
+        brZidova = brZidova + 1
+    if matZidovi[2 * trenutnaPozicija[0] + 3][trenutnaPozicija[1]] == chr(0x01C1):
+        brZidova = brZidova + 1
+    if brZidova >= 2:
+        return False
+    else:
+        return True
+
+#           X1      X2        O1      O2
+testGame([(0, 3), (2, 1)], [(2, 2), (1, 3)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)], [])
 """#Prosledjuje se po jedna koordinata
     pozicijeHZidovaX: list,
     pozicijeVZidovaX: list,
@@ -182,6 +296,19 @@ testGame([(0, 3), (2, 1)], [(2, 2), (1, 2)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)
 )"""
 print(matPolja)
 print(matZidovi)
+print("Start X1:", startX1)
+print("Start X2:", startX2)
+print("Start O1:", startO1)
+print("Start O2:", startO2)
+print(proveriPutDiagonalnoGoreLevo(O2))
+#print(proveriPutDiagonalnoDoleDesno(O2))
+print(proveriPutDiagonalnoDoleLevo(O2))
+#print(proveriPutDiagonalnoGoreDesno(O2))
+#print(proveriPutNadesno(O2))
+print(proveriPutNadole(O2))
+print(proveriPutNalevo(O2))
+print(proveriPutNagore(O2))
+
 
 # prosledjujemo samo tuple od koordinate na koju zelimo da pomerimo
 def validnostPotezaPesaka(sledecaPozicija: tuple()):
@@ -190,9 +317,11 @@ def validnostPotezaPesaka(sledecaPozicija: tuple()):
     # u svim ostalim slucajevima ne moze da ukloni protivnicke pesake, kao ni svog drugog
     # proverava ako je na jednom polju do cilja => moze da stane na to polje
     # ako se pesak nalazi na susednom polju pesak ga moze preskociti
-    # proverava da li je na putu zid, ne moze ga preskociti
-    # proverava da startna polja nisu ogradjena
+    # proverava da li je na putu zid, ne moze ga preskociti, igrac ne moze da se krece za 1 polje blize zidu ako postoji zid posle prvog polja na putu
+    # Za kraj to do: proverava da startna polja nisu ogradjena
     n = 0
 
 
 # def validnostPotezaZida()
+
+
