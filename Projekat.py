@@ -99,12 +99,20 @@ def unosPocetnihParametara(
         matZ.append([])
         if i % 2 == 0:
             for k in range(n):
-                matZ[i].append("–")
+                if i==0 or i==2*m:
+                    matZ[i].append("=")
+                else:
+                    matZ[i].append("-")
         else:
             for k in range(n + 1):
-                matZ[i].append("|")
+                if k==0 or k==n:
+                    matZ[i].append(chr(0x01C1))
+                else:
+                    matZ[i].append("|")
     matPolja = matP
+    print(matPolja)
     matZidovi = matZ
+    print(matZidovi)
 
 
 """unosPocetnihParametara(4, 5, 10, (1, 1), (1, 2))
@@ -125,7 +133,9 @@ def testGame(
     pozicijeVZidovaO: list,
 ):
     global X1, X2, O1, O2, matPolja, matZidovi
+    print("Pocetne matrice:")
     unosPocetnihParametara(4, 5, 10, (1, 1), (1, 2))
+    
 
     # anuliranje pocetnih pozicija igraca
     matPolja[X1[0]][X1[1]] = 0
@@ -178,9 +188,9 @@ def testGame(
 
 def proveriPutNagore(trenutnaPozicija: tuple) -> bool:
     global matZidovi
-    if (matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "=") or (
-        matZidovi[2 * trenutnaPozicija[0] - 2][trenutnaPozicija[1]] == "="
-    ):
+    if (matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "="):
+        return False
+    elif(matZidovi[2 * trenutnaPozicija[0] - 2][trenutnaPozicija[1]] == "="):
         return False
     else:
         return True
@@ -188,9 +198,9 @@ def proveriPutNagore(trenutnaPozicija: tuple) -> bool:
 
 def proveriPutNadole(trenutnaPozicija: tuple) -> bool:
     global matZidovi
-    if (matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "=") or (
-        matZidovi[2 * trenutnaPozicija[0] + 4][trenutnaPozicija[1]] == "="
-    ):
+    if (matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "="):
+        return False
+    elif (matZidovi[2 * trenutnaPozicija[0] + 4][trenutnaPozicija[1]] == "="):
         return False
     else:
         return True
@@ -198,11 +208,9 @@ def proveriPutNadole(trenutnaPozicija: tuple) -> bool:
 
 def proveriPutNadesno(trenutnaPozicija: tuple) -> bool:
     global matZidovi
-    if (
-        matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1)
-    ) or (
-        matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 2] == chr(0x01C1)
-    ):
+    if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1)):
+        return False
+    elif (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 2] == chr(0x01C1)):
         return False
     else:
         return True
@@ -213,9 +221,9 @@ def proveriPutNadesno(trenutnaPozicija: tuple) -> bool:
 
 def proveriPutNalevo(trenutnaPozicija: tuple) -> bool:
     global matZidovi
-    if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1)) or (
-        matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] - 1] == chr(0x01C1)
-    ):
+    if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1)):
+        return False
+    elif(matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] - 1] == chr(0x01C1)):
         return False
     else:
         return True
@@ -226,11 +234,11 @@ def proveriPutDiagonalnoDoleDesno(trenutnaPozicija: tuple) -> bool:
     brZidova = 0
     if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1):
         brZidova = brZidova + 1
+    elif matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1] + 1] == "=":
+        brZidova = brZidova + 1
     if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "=":
         brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1] + 1] == "=":
-        brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0] + 3][trenutnaPozicija[1] + 1] == chr(0x01C1):
+    elif matZidovi[2 * trenutnaPozicija[0] + 3][trenutnaPozicija[1] + 1] == chr(0x01C1):
         brZidova = brZidova + 1
     if brZidova >= 2:
         return False
@@ -242,28 +250,27 @@ def proveriPutDiagonalnoGoreDesno(trenutnaPozicija: tuple) -> bool:
     brZidova = 0
     if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "=":
         brZidova = brZidova + 1
+    elif matZidovi[2 * trenutnaPozicija[0] - 1][trenutnaPozicija[1] + 1] == chr(0x01C1):
+        brZidova = brZidova + 1
     if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1):
         brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0] - 1][trenutnaPozicija[1] + 1] == chr(0x01C1):
-        brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1] + 1] == "=":
+    elif matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1] + 1] == "=":
         brZidova = brZidova + 1
     if brZidova >= 2:
         return False
     else:
         return True
 
-
 def proveriPutDiagonalnoGoreLevo(trenutnaPozicija: tuple) -> bool:
     global matZidovi
     brZidova = 0
     if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "=":
         brZidova = brZidova + 1
+    elif matZidovi[2 * trenutnaPozicija[0] - 1][trenutnaPozicija[1]] == chr(0x01C1):
+        brZidova = brZidova + 1
     if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1):
         brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1] - 1] == "=":
-        brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0] - 1][trenutnaPozicija[1]] == chr(0x01C1):
+    elif matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1] - 1] == "=":
         brZidova = brZidova + 1
     if brZidova >= 2:
         return False
@@ -273,18 +280,19 @@ def proveriPutDiagonalnoGoreLevo(trenutnaPozicija: tuple) -> bool:
 def proveriPutDiagonalnoDoleLevo(trenutnaPozicija: tuple) -> bool:
     global matZidovi
     brZidova = 0
-    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "=":
-        brZidova = brZidova + 1
     if matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1):
         brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1] - 1] == "=":
+    elif matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1] - 1] == "=":
         brZidova = brZidova + 1
-    if matZidovi[2 * trenutnaPozicija[0] + 3][trenutnaPozicija[1]] == chr(0x01C1):
+    if matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "=":
+        brZidova = brZidova + 1
+    elif matZidovi[2 * trenutnaPozicija[0] + 3][trenutnaPozicija[1]] == chr(0x01C1):
         brZidova = brZidova + 1
     if brZidova >= 2:
         return False
     else:
         return True
+
 
 #           X1      X2        O1      O2
 testGame([(0, 3), (2, 1)], [(2, 2), (1, 3)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)], [])
@@ -294,17 +302,21 @@ testGame([(0, 3), (2, 1)], [(2, 2), (1, 3)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)
     pozicijeHZidovaO: list,
     pozicijeVZidovaO: list,
 )"""
-print(matPolja)
-print(matZidovi)
+print("Trenutna matrica polja: ", matPolja)
+print("Trenutna matrica zidova:", matZidovi)
 print("Start X1:", startX1)
 print("Start X2:", startX2)
 print("Start O1:", startO1)
 print("Start O2:", startO2)
-print(proveriPutDiagonalnoGoreLevo(O2))
-#print(proveriPutDiagonalnoDoleDesno(O2))
-print(proveriPutDiagonalnoDoleLevo(O2))
-#print(proveriPutDiagonalnoGoreDesno(O2))
-#print(proveriPutNadesno(O2))
+print("Trenutni X1:", X1)
+print("Trenutni X2:", X2)
+print("Trenutni O1:", O1)
+print("Trenutni O2:", O2)
+print(proveriPutDiagonalnoGoreLevo(X2))
+print(proveriPutDiagonalnoDoleDesno(O2))
+print(proveriPutDiagonalnoDoleLevo(X2))
+print(proveriPutDiagonalnoGoreDesno(X2))
+print(proveriPutNadesno(O2))
 print(proveriPutNadole(O2))
 print(proveriPutNalevo(O2))
 print(proveriPutNagore(O2))
