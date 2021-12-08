@@ -1,5 +1,5 @@
 # Trenutni igrac, True igra X, false igra O
-trenutniIgrac = False
+trenutniIgrac = True
 
 # Startne koordinate pesaka
 startX1 = tuple()
@@ -15,7 +15,7 @@ O2 = tuple()
 # pamti se broj preostalih zidova
 brVertikalnihZidovaX = 0
 brHorizontalnihZidovaX = 0
-brVertikalinihZidovaO = 0
+brVertikalnihZidovaO = 0
 brHorizontalnihZidovaO = 0
 # trenutni izgled matrica polja i zidova
 matPolja = []
