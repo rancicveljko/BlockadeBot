@@ -1,40 +1,4 @@
-"""n=4
-#redovi
-m=5
-
-#0 su inicijalno prazna polja
-#X1 je prva figura igraca X
-#X2 je druga figura igraca X
-#O1 je prva figura igraca O
-#O2 je druga figura igraca O
-matPolja=[[0 for i in range(n)] for j in range(m)]
-
-#0 su horizontalni zidovi
-#1 su vertikalni zidovi
-matZidovi=[]
-for i in range(2*m+1):
-    matZidovi.append([])
-    if i%2==0:
-        for k in range(n):
-            matZidovi[i].append(0)
-    else: 
-        for k in range(n+1):
-            matZidovi[i].append(1)
-print(matZidovi)
-
-#za korisnika
-matZidoviKorisnik=[[] for k in range(m)]
-for i in range(n+1):
-    if i%2==0:
-        for k in range(n):
-            matZidoviKorisnik[i].append(0)
-    else: 
-        for k in range(n-1):
-            matZidoviKorisnik[i].append(1)
-
-print("Polja", matPolja)
-print("Zidovi", matZidoviKorisnik)"""
-# def prikaziMatricu
+# To do: def prikaziMatricu
 
 # Trenutni igrac, True igra X, false igra O
 trenutniIgrac = False
@@ -308,14 +272,8 @@ testGame([(0, 3), (2, 1)], [(2, 2), (1, 2)], [(2, 1), (4, 2)], [(1, 3)], [(6, 1)
 )"""
 print("Trenutna matrica polja: ", matPolja)
 print("Trenutna matrica zidova:", matZidovi)
-print("Start X1:", startX1)
-print("Start X2:", startX2)
-print("Start O1:", startO1)
-print("Start O2:", startO2)
-print("Trenutni X1:", X1)
-print("Trenutni X2:", X2)
-print("Trenutni O1:", O1)
-print("Trenutni O2:", O2)
+print("Start X1:", startX1, "\nStart X2:", startX2, "\nStart O1:", startO1, "\nStart O2:", startO2)
+print("Trenutni X1:", X1, "\nTrenutni X2:", X2, "\nTrenutni O1:", O1, "\nTrenutni O2:", O2)
 print(proveriPutDiagonalnoGoreLevo(X2))
 print(proveriPutDiagonalnoDoleDesno(O2))
 print(proveriPutDiagonalnoDoleLevo(X2))
@@ -329,12 +287,13 @@ print(proveriKrajIgre(O2))
 
 # prosledjujemo samo tuple od koordinate na koju zelimo da pomerimo
 def validnostPotezaPesaka(sledecaPozicija: tuple()):
-    # proverava da li se neki pesak vec nalazi na tom polju, pomera se samo za jedno mesto
-    # proverava da li je dosao do do cilja (protivnickog starta), moze da stane i ukoliko ima protivnickog pesaka
+    # + proverava da li se neki pesak vec nalazi na tom polju, 
+    # pomera se samo za jedno mesto ako pesak vec postoji 
+    # + proverava da li je dosao do do cilja (protivnickog starta), moze da stane i ukoliko ima protivnickog pesaka
     # u svim ostalim slucajevima ne moze da ukloni protivnicke pesake, kao ni svog drugog
     # proverava ako je na jednom polju do cilja => moze da stane na to polje
     # ako se pesak nalazi na susednom polju pesak ga moze preskociti
-    # proverava da li je na putu zid, ne moze ga preskociti, igrac ne moze da se krece za 1 polje blize zidu ako postoji zid posle prvog polja na putu
+    # + proverava da li je na putu zid, ne moze ga preskociti, igrac ne moze da se krece za 1 polje blize zidu ako postoji zid posle prvog polja na putu
     # Za kraj to do: proverava da startna polja nisu ogradjena
     n = 0
 
