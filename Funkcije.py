@@ -2,7 +2,6 @@ from Promenljive import *
 
 # na osnovu X1 i X2 se postavljaju O1 i O2 simetricno
 
-
 def unosPocetnihParametara(n: int, m: int, maxZidova: int, X1Start: tuple(), X2Start: tuple()):
     global X1, X2, O1, O2, brVertikalnihZidovaX, brHorizontalnihZidovaX, brVertikalnihZidovaO, brHorizontalnihZidovaO, matPolja, matZidovi
     global startX1, startX2, startO1, startO2
@@ -31,8 +30,6 @@ def unosPocetnihParametara(n: int, m: int, maxZidova: int, X1Start: tuple(), X2S
     startO1 = (m-X1Start[0]-1, X1Start[1])
     startO2 = (m-X2Start[0]-1, X2Start[1])
 
-    # 0 su horizontalni zidovi
-    # 1 su vertikalni zidovi
     matZ = []
     for i in range(2 * m + 1):
         matZ.append([])
@@ -52,9 +49,6 @@ def unosPocetnihParametara(n: int, m: int, maxZidova: int, X1Start: tuple(), X2S
     print(matPolja)
     matZidovi = matZ
     print(matZidovi)
-
-# Prosledjuje se po jedna koordinata
-
 
 def testGame(pozicijePesakaX: list, pozicijePesakaO: list, pozicijeHZidova: list, pozicijeVZidova: list):
     global X1, X2, O1, O2, matPolja, matZidovi
@@ -77,33 +71,12 @@ def testGame(pozicijePesakaX: list, pozicijePesakaO: list, pozicijeHZidova: list
     matPolja[O1[0]][O1[1]] = "O1"
     matPolja[O2[0]][O2[1]] = "O2"
 
-    # Parni redovi su –
-    # Neparni redovi |
-    # for i in range(len(pozicijeHZidovaX)):
-    #     matZidovi[pozicijeHZidovaX[i][0]][pozicijeHZidovaX[i][1]] = "="
-    #     # isti je red, razlicita kolona
-    #     matZidovi[pozicijeHZidovaX[i][0]][pozicijeHZidovaX[i][1] + 1] = "="
-    # for i in range(len(pozicijeVZidovaX)):
-    #     matZidovi[pozicijeVZidovaX[i][0]][pozicijeVZidovaX[i][1]] = chr(0x01C1)
-    #     matZidovi[pozicijeVZidovaX[i][0] +
-    #               2][pozicijeVZidovaX[i][1]] = chr(0x01C1)
-    # for i in range(len(pozicijeHZidovaO)):
-    #     matZidovi[pozicijeHZidovaO[i][0]][pozicijeHZidovaO[i][1]] = "="
-    #     # isti je red, razlicita kolona
-    #     matZidovi[pozicijeHZidovaO[i][0]][pozicijeHZidovaO[i][1] + 1] = "="
-    # for i in range(len(pozicijeVZidovaO)):
-    #     matZidovi[pozicijeVZidovaO[i][0]][pozicijeVZidovaO[i][1]] = chr(0x01C1)
-    #     # +2 jer su naredni red -, pa tek onda idu |
-    #     matZidovi[pozicijeVZidovaO[i][0] +
-    #               2][pozicijeVZidovaO[i][1]] = chr(0x01C1)
-
     for i in range(len(pozicijeHZidova)):
         postaviZid(pozicijeHZidova[i], "H")
     for i in range(len(pozicijeVZidova)):
         postaviZid(pozicijeVZidova[i], "V")
 
 # Pozivaju se u odigraj potez sledece provere:
-
 
 def proveriPutNagore(trenutnaPozicija: tuple) -> bool:
     global matZidovi
@@ -133,9 +106,6 @@ def proveriPutNadesno(trenutnaPozicija: tuple) -> bool:
         return False
     else:
         return True
-
-
-# chr(0x01C1) je || samo kao 1 char
 
 
 def proveriPutNalevo(trenutnaPozicija: tuple) -> bool:
@@ -215,8 +185,7 @@ def proveriPutDiagonalnoDoleLevo(trenutnaPozicija: tuple) -> bool:
     else:
         return True
 
-# pozivamo ga u skok igraca
-
+# poziva se u skok igraca
 
 def proveriKrajIgre(trenutnaPozicija: tuple) -> bool:
     # True je X
@@ -311,8 +280,10 @@ def odigrajPotez(pesak: str, sledeciSkokSmer: str, zid: tuple):
 
 
 # poziva se u odigraj potez
+
 def skokIgraca(izabraniPesak: str, izabraniPesakKoord: tuple(), sledeciSkokSmer: str):
     # pomeranje pesaka
+
     if(sledeciSkokSmer == 'levo'):
         if(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-1)
@@ -463,7 +434,7 @@ def postaviZid(koordPolja: tuple, tipZida: str):
                 brVertikalnihZidovaO = brVertikalnihZidovaO-1
 
 
-# ovo koristimo u skokIgraca
+# poziva se u skok igraca
 def proveriCiljJednoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSkoka: str) -> bool:
     if(smerSkoka == "levo"):
         if(trenutniIgrac == True):
