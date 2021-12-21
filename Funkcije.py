@@ -2,6 +2,7 @@ from Promenljive import *
 
 # na osnovu X1 i X2 se postavljaju O1 i O2 simetricno
 
+
 def unosPocetnihParametara(n: int, m: int, maxZidova: int, X1Start: tuple(), X2Start: tuple()):
     global X1, X2, O1, O2, brVertikalnihZidovaX, brHorizontalnihZidovaX, brVertikalnihZidovaO, brHorizontalnihZidovaO, matPolja, matZidovi
     global startX1, startX2, startO1, startO2
@@ -50,6 +51,7 @@ def unosPocetnihParametara(n: int, m: int, maxZidova: int, X1Start: tuple(), X2S
     matZidovi = matZ
     print(matZidovi)
 
+
 def testGame(pozicijePesakaX: list, pozicijePesakaO: list, pozicijeHZidova: list, pozicijeVZidova: list):
     global X1, X2, O1, O2, matPolja, matZidovi
     print("Pocetne matrice:")
@@ -78,44 +80,60 @@ def testGame(pozicijePesakaX: list, pozicijePesakaO: list, pozicijeHZidova: list
 
 # Pozivaju se u odigraj potez sledece provere:
 
-def proveriPutNagore(trenutnaPozicija: tuple) -> bool:
+
+def proveriPutNagore1(trenutnaPozicija: tuple) -> bool:
     global matZidovi
     if (matZidovi[2 * trenutnaPozicija[0]][trenutnaPozicija[1]] == "="):
         return False
-    elif(matZidovi[2 * trenutnaPozicija[0] - 2][trenutnaPozicija[1]] == "="):
+    return True
+
+
+def proveriPutNagore2(trenutnaPozicija: tuple) -> bool:
+    if(matZidovi[2 * trenutnaPozicija[0] - 2][trenutnaPozicija[1]] == "="):
         return False
-    else:
-        return True
+    return True
 
 
-def proveriPutNadole(trenutnaPozicija: tuple) -> bool:
+def proveriPutNadole1(trenutnaPozicija: tuple) -> bool:
     global matZidovi
     if (matZidovi[2 * trenutnaPozicija[0] + 2][trenutnaPozicija[1]] == "="):
         return False
-    elif (matZidovi[2 * trenutnaPozicija[0] + 4][trenutnaPozicija[1]] == "="):
+    return True
+
+
+def proveriPutNadole2(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    if (matZidovi[2 * trenutnaPozicija[0] + 4][trenutnaPozicija[1]] == "="):
         return False
-    else:
-        return True
+    return True
 
 
-def proveriPutNadesno(trenutnaPozicija: tuple) -> bool:
+def proveriPutNadesno1(trenutnaPozicija: tuple) -> bool:
     global matZidovi
     if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 1] == chr(0x01C1)):
         return False
-    elif (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 2] == chr(0x01C1)):
+    return True
+
+
+def proveriPutNadesno2(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] + 2] == chr(0x01C1)):
         return False
-    else:
-        return True
+    return True
 
 
-def proveriPutNalevo(trenutnaPozicija: tuple) -> bool:
+def proveriPutNalevo1(trenutnaPozicija: tuple) -> bool:
     global matZidovi
     if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1]] == chr(0x01C1)):
         return False
-    elif(matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] - 1] == chr(0x01C1)):
+    return True
+
+
+def proveriPutNalevo2(trenutnaPozicija: tuple) -> bool:
+    global matZidovi
+    if (matZidovi[2 * trenutnaPozicija[0] + 1][trenutnaPozicija[1] - 1] == chr(0x01C1)):
         return False
-    else:
-        return True
+    return True
 
 
 def proveriPutDiagonalnoDoleDesno(trenutnaPozicija: tuple) -> bool:
@@ -187,6 +205,7 @@ def proveriPutDiagonalnoDoleLevo(trenutnaPozicija: tuple) -> bool:
 
 # poziva se u skok igraca
 
+
 def proveriKrajIgre(trenutnaPozicija: tuple) -> bool:
     # True je X
     if(trenutniIgrac == True):
@@ -234,23 +253,80 @@ def odigrajPotez(pesak: str, sledeciSkokSmer: str, zid: tuple):
 
     # provera da li je zid na putu igraca
     if(sledeciSkokSmer == "levo"):
-        if(proveriPutNalevo(izabraniPesakKoord) == False):
+        # da li je zid1
+        if(not proveriPutNalevo1(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
             return
+        # da li je cilj
+        elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je zid2
+        elif(not proveriPutNalevo2(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
+            return
+        # da li je cilj
+        elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je mesto zauzeto se proverava u skokIgraca()
         else:
             skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
     elif(sledeciSkokSmer == "desno"):
-        if(proveriPutNadesno(izabraniPesakKoord) == False):
+        if(not proveriPutNadesno1(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
             return
+        # da li je cilj
+        elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je zid2
+        elif(not proveriPutNadesno2(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
+            return
+        # da li je cilj
+        elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je mesto zauzeto se proverava u skokIgraca()
         else:
             skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
     elif(sledeciSkokSmer == "gore"):
-        if(proveriPutNagore(izabraniPesakKoord) == False):
+        if(not proveriPutNagore1(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
             return
+        # da li je cilj
+        elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je zid2
+        elif(not proveriPutNagore2(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
+            return
+        # da li je cilj
+        elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je mesto zauzeto se proverava u skokIgraca()
         else:
             skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
     elif(sledeciSkokSmer == "dole"):
-        if(proveriPutNadole(izabraniPesakKoord) == False):
+        if(not proveriPutNadole1(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
             return
+        # da li je cilj
+        elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je zid2
+        elif(not proveriPutNadole2(izabraniPesakKoord)):
+            print("Imate zid na tom putu, izaberite drugi put")
+            return
+        # da li je cilj
+        elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+            skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
+            return
+        # da li je mesto zauzeto se proverava u skokIgraca()
         else:
             skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokSmer)
     elif(sledeciSkokSmer == "dolelevo"):
@@ -285,8 +361,6 @@ def skokIgraca(izabraniPesak: str, izabraniPesakKoord: tuple(), sledeciSkokSmer:
     # pomeranje pesaka
 
     if(sledeciSkokSmer == 'levo'):
-        if(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
-            sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-1)
         if(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]-2))):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-2)
         elif (proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]-1))):
@@ -443,6 +517,7 @@ def proveriCiljJednoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSko
         elif(trenutniIgrac == False):
             if((trenutnaPozIgraca[0], trenutnaPozIgraca[1]-1) == startX1 or (trenutnaPozIgraca[0], trenutnaPozIgraca[1]-1) == startX2):
                 return True
+        return False
 
     elif(smerSkoka == "desno"):
         if(trenutniIgrac == True):
@@ -451,6 +526,7 @@ def proveriCiljJednoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSko
         elif(trenutniIgrac == False):
             if((trenutnaPozIgraca[0], trenutnaPozIgraca[1]+1) == startX1 or (trenutnaPozIgraca[0], trenutnaPozIgraca[1]+1) == startX2):
                 return True
+        return False
 
     elif(smerSkoka == "gore"):
         if(trenutniIgrac == True):
@@ -459,6 +535,7 @@ def proveriCiljJednoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSko
         elif(trenutniIgrac == False):
             if((trenutnaPozIgraca[0]-1, trenutnaPozIgraca[1]) == startX1 or (trenutnaPozIgraca[0]-1, trenutnaPozIgraca[1]) == startX2):
                 return True
+        return False
 
     elif(smerSkoka == "dole"):
         if(trenutniIgrac == True):
@@ -466,4 +543,39 @@ def proveriCiljJednoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSko
                 return True
         elif(trenutniIgrac == False):
             if((trenutnaPozIgraca[0]+1, trenutnaPozIgraca[1]) == startX1 or (trenutnaPozIgraca[0]+1, trenutnaPozIgraca[1]) == startX2):
+                return True
+        return False
+
+
+def proveriCiljDrugoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSkoka: str) -> bool:
+    if(smerSkoka == "levo"):
+        if(trenutniIgrac == True):
+            if((trenutnaPozIgraca[0], trenutnaPozIgraca[1]-2) == startO1 or (trenutnaPozIgraca[0], trenutnaPozIgraca[1]-2) == startO2):
+                return True
+        elif(trenutniIgrac == False):
+            if((trenutnaPozIgraca[0], trenutnaPozIgraca[1]-2) == startX1 or (trenutnaPozIgraca[0], trenutnaPozIgraca[1]-2) == startX2):
+                return True
+
+    elif(smerSkoka == "desno"):
+        if(trenutniIgrac == True):
+            if((trenutnaPozIgraca[0], trenutnaPozIgraca[1]+2) == startO1 or (trenutnaPozIgraca[0], trenutnaPozIgraca[1]+2) == startO2):
+                return True
+        elif(trenutniIgrac == False):
+            if((trenutnaPozIgraca[0], trenutnaPozIgraca[1]+2) == startX1 or (trenutnaPozIgraca[0], trenutnaPozIgraca[1]+2) == startX2):
+                return True
+
+    elif(smerSkoka == "gore"):
+        if(trenutniIgrac == True):
+            if((trenutnaPozIgraca[0]-2, trenutnaPozIgraca[1]) == startO1 or (trenutnaPozIgraca[0]-2, trenutnaPozIgraca[1]) == startO2):
+                return True
+        elif(trenutniIgrac == False):
+            if((trenutnaPozIgraca[0]-2, trenutnaPozIgraca[1]) == startX1 or (trenutnaPozIgraca[0]-2, trenutnaPozIgraca[1]) == startX2):
+                return True
+
+    elif(smerSkoka == "dole"):
+        if(trenutniIgrac == True):
+            if((trenutnaPozIgraca[0]+2, trenutnaPozIgraca[1]) == startO1 or (trenutnaPozIgraca[0]+2, trenutnaPozIgraca[1]) == startO2):
+                return True
+        elif(trenutniIgrac == False):
+            if((trenutnaPozIgraca[0]+2, trenutnaPozIgraca[1]) == startX1 or (trenutnaPozIgraca[0]+2, trenutnaPozIgraca[1]) == startX2):
                 return True
