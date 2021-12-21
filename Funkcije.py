@@ -579,3 +579,26 @@ def proveriCiljDrugoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSko
         elif(trenutniIgrac == False):
             if((trenutnaPozIgraca[0]+2, trenutnaPozIgraca[1]) == startX1 or (trenutnaPozIgraca[0]+2, trenutnaPozIgraca[1]) == startX2):
                 return True
+
+
+def prikaziIgru():
+    global matPolja, matZidovi
+    matCela = list()
+    for i in range(len(matZidovi)):
+        if i % 2 == 0:
+            tmpLista1 = list()
+            for j in range(len(matPolja[0])):
+                tmpLista1.append('')
+                tmpLista1.append(matZidovi[i][j])
+            tmpLista1.append('')
+            matCela.append(tmpLista1)
+        elif i % 2 != 0:
+            tmpLista = list()
+            for j in range(len(matPolja[0])):
+                tmpLista.append(matZidovi[i][j])
+                tmpLista.append(matPolja[i//2][j])
+            tmpLista.append(matZidovi[i][len(matZidovi[i])-1])
+            matCela.append(tmpLista)
+    print("Cela tabla: \n")
+    for i in range(len(matCela)):
+        print(matCela[i], "\n")
