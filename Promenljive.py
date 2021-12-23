@@ -1,3 +1,4 @@
+# region trenutno stanje
 # Trenutni igrac, True igra X, false igra O
 trenutniIgrac = True
 
@@ -22,3 +23,23 @@ matPolja = []
 matZidovi = []
 hZidovi = []
 vZidovi = []
+# endregion
+# region novo stanje
+# Trenutni igrac, True igra X, false igra O
+staritrenutniIgrac: bool
+# pamte se trenutne kooridinate igraca
+stariX1: tuple
+stariX2: tuple
+stariO1: tuple
+stariO2: tuple
+# pamti se broj preostalih zidova
+staribrVertikalnihZidovaX = 0
+staribrHorizontalnihZidovaX = 0
+staribrVertikalnihZidovaO = 0
+staribrHorizontalnihZidovaO = 0
+# trenutni izgled matrica polja i zidova
+starimatPolja = []
+starimatZidovi = []
+starihZidovi = []
+starivZidovi = []
+# endregion
