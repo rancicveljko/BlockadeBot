@@ -625,7 +625,7 @@ def prikaziIgru():
         print(matCela[i], "\n")
 
 
-def prikaziMogucePotezeZaPesaka(trenutnaPozicija: tuple):
+def prikaziMogucePoteze(trenutnaPozicija: tuple):
     print(get_destinations(trenutnaPozicija))
     (horiz, vert) = get_available_walls()
     print("Lista mogucih horizontalnih zidova: \n", horiz)
