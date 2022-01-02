@@ -293,10 +293,12 @@ def proveriCiljDrugoPolje(trenutnaPozIgraca: tuple, trenutniIgrac: bool, smerSko
 
 
 def proveriDaLiZidBlokiraStart(pocPozicijaZida: tuple, tipZida: str, izabraniPesakKoord: tuple):
+    sacuvajStanje()
     postaviZid(pocPozicijaZida, tipZida)
     if not a_star(izabraniPesakKoord):
-        oboriZid(pocPozicijaZida, tipZida)
+        resetujStanje()
         return True
+    resetujStanje()
     return False
 # endregion
 # region Igra
@@ -376,8 +378,210 @@ def testGame(pozicijePesakaX: list, pozicijePesakaO: list, pozicijeHZidova: list
         postaviZid(pozicijeVZidova[i], "V")
 
 
-def odigrajPotez(pesak: str, sledeciSkokSmer: str, zid: tuple):
-    # odabir pesaka
+# def odigrajPotez(pesak: str, sledeciSkokSmer: str, zid: tuple):
+#     # odabir pesaka
+#     global trenutniIgrac
+#     izabraniPesakKoord = tuple()
+#     izabraniPesak = ''
+#     if(trenutniIgrac == True):
+#         if(pesak == '1'):
+#             izabraniPesakKoord = X1
+#             izabraniPesak = 'X1'
+#         elif(pesak == '2'):
+#             izabraniPesakKoord = X2
+#             izabraniPesak = 'X2'
+#     else:
+#         if(pesak == '1'):
+#             izabraniPesakKoord = O1
+#             izabraniPesak = 'O1'
+#         elif(pesak == '2'):
+#             izabraniPesakKoord = O2
+#             izabraniPesak = 'O2'
+
+#     sacuvajStanje()
+#     rezSkoka = -1
+#     # provera da li je zid na putu igraca
+#     if(sledeciSkokSmer == "levo"):
+#         # da li je zid1
+#         if(not proveriPutNalevo1(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         # da li je zid2
+#         elif(not proveriPutNalevo2(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-2)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]-2))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-2)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]-1))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#     elif(sledeciSkokSmer == "desno"):
+#         if(not proveriPutNadesno1(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         # da li je zid2
+#         elif(not proveriPutNadesno2(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+2)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]+2))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+2)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]+2))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+2)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#     elif(sledeciSkokSmer == "gore"):
+#         if(not proveriPutNagore1(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         # da li je zid2
+#         elif(not proveriPutNagore2(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]-2, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-2, izabraniPesakKoord[1]))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]-2, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-1, izabraniPesakKoord[1]))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#     elif(sledeciSkokSmer == "dole"):
+#         if(not proveriPutNadole1(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         # da li je zid2
+#         elif(not proveriPutNadole2(izabraniPesakKoord)):
+#             print("Imate zid na tom putu, izaberite drugi put")
+#             return -1
+#         # da li je cilj
+#         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]+2, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+2, izabraniPesakKoord[1]))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]+2, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+1, izabraniPesakKoord[1]))):
+#             sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1])
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#     elif(sledeciSkokSmer == "dolelevo"):
+#         if(proveriPutDiagonalnoDoleLevo(izabraniPesakKoord) == False):
+#             return -1
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1))):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         else:
+#             return -1
+#     elif(sledeciSkokSmer == "gorelevo"):
+#         if(proveriPutDiagonalnoGoreLevo(izabraniPesakKoord) == False):
+#             return -1
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1))):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         else:
+#             return -1
+#     elif(sledeciSkokSmer == "doledesno"):
+#         if(proveriPutDiagonalnoDoleDesno(izabraniPesakKoord) == False):
+#             return -1
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1))):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         else:
+#             return -1
+#     elif(sledeciSkokSmer == "goredesno"):
+#         if(proveriPutDiagonalnoGoreDesno(izabraniPesakKoord) == False):
+#             return -1
+#         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1))):
+#             sledeciSkokKoord = (
+#                 izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1)
+#             rezSkoka = skokIgraca(
+#                 izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+#         else:
+#             return -1
+#     if(proveriMozeLiZid(zid[1:], zid[0]) == True):
+#         if(not proveriDaLiZidBlokiraStart(zid[1:], zid[0], izabraniPesakKoord)):
+#             if(rezSkoka != -1):
+#                 trenutniIgrac = not trenutniIgrac
+#                 return rezSkoka
+#         else:
+#             print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
+#             resetujStanje()
+#     else:
+#         print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
+#         resetujStanje()
+
+
+# poziva se u odigraj potez
+
+def odigrajPotezPesak(pesak: str, sledeciSkokSmer: str):
     global trenutniIgrac
     izabraniPesakKoord = tuple()
     izabraniPesak = ''
@@ -397,172 +601,235 @@ def odigrajPotez(pesak: str, sledeciSkokSmer: str, zid: tuple):
             izabraniPesak = 'O2'
 
     sacuvajStanje()
-    rezSkoka=-1
+    rezSkoka = -1
     # provera da li je zid na putu igraca
     if(sledeciSkokSmer == "levo"):
         # da li je zid1
         if(not proveriPutNalevo1(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-1)
-            rezSkoka = skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         # da li je zid2
         elif(not proveriPutNalevo2(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-2)
-            rezSkoka= skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]-2))):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-2)
-            rezSkoka= skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]-1))):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]-1)
-            rezSkoka= skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
     elif(sledeciSkokSmer == "desno"):
         if(not proveriPutNadesno1(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         # da li je zid2
         elif(not proveriPutNadesno2(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+2)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]+2))):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+2)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0], izabraniPesakKoord[1]+2))):
             sledeciSkokKoord = (izabraniPesakKoord[0], izabraniPesakKoord[1]+2)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
     elif(sledeciSkokSmer == "gore"):
         if(not proveriPutNagore1(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         # da li je zid2
         elif(not proveriPutNagore2(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0]-2, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-2, izabraniPesakKoord[1]))):
             sledeciSkokKoord = (izabraniPesakKoord[0]-2, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-1, izabraniPesakKoord[1]))):
             sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
     elif(sledeciSkokSmer == "dole"):
         if(not proveriPutNadole1(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         # da li je zid2
         elif(not proveriPutNadole2(izabraniPesakKoord)):
             print("Imate zid na tom putu, izaberite drugi put")
+            resetujStanje()
             return -1
         # da li je cilj
         elif(proveriCiljDrugoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
             sledeciSkokKoord = (izabraniPesakKoord[0]+2, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+2, izabraniPesakKoord[1]))):
             sledeciSkokKoord = (izabraniPesakKoord[0]+2, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+1, izabraniPesakKoord[1]))):
             sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1])
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
     elif(sledeciSkokSmer == "dolelevo"):
         if(proveriPutDiagonalnoDoleLevo(izabraniPesakKoord) == False):
+            resetujStanje()
             return -1
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
-            sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1))):
-            sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]+1, izabraniPesakKoord[1]-1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         else:
+            resetujStanje()
             return -1
     elif(sledeciSkokSmer == "gorelevo"):
         if(proveriPutDiagonalnoGoreLevo(izabraniPesakKoord) == False):
+            resetujStanje()
             return -1
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
-            sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1))):
-            sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]-1, izabraniPesakKoord[1]-1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         else:
+            resetujStanje()
             return -1
     elif(sledeciSkokSmer == "doledesno"):
         if(proveriPutDiagonalnoDoleDesno(izabraniPesakKoord) == False):
+            resetujStanje()
             return -1
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
-            sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1))):
-            sledeciSkokKoord = (izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]+1, izabraniPesakKoord[1]+1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         else:
+            resetujStanje()
             return -1
     elif(sledeciSkokSmer == "goredesno"):
         if(proveriPutDiagonalnoGoreDesno(izabraniPesakKoord) == False):
+            resetujStanje()
             return -1
         elif(proveriCiljJednoPolje(izabraniPesakKoord, trenutniIgrac, sledeciSkokSmer)):
-            sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         elif(proveriSlobodnoMesto((izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1))):
-            sledeciSkokKoord = (izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1)
-            rezSkoka=  skokIgraca(izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
+            sledeciSkokKoord = (
+                izabraniPesakKoord[0]-1, izabraniPesakKoord[1]+1)
+            rezSkoka = skokIgraca(
+                izabraniPesak, izabraniPesakKoord, sledeciSkokKoord)
         else:
-            return -1
-    if(proveriMozeLiZid(zid[1:], zid[0]) == True):
-        if(not proveriDaLiZidBlokiraStart(zid[1:], zid[0], izabraniPesakKoord)):
-            if(rezSkoka!=-1):
-                trenutniIgrac = not trenutniIgrac
-                return rezSkoka
-        else:
-            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             resetujStanje()
+            return -1
+    return rezSkoka
+
+
+def odigrajPotezZid(tipZida: str, koordZida: tuple):
+    global X1, X2, O1, O2, trenutniIgrac
+
+    if(proveriMozeLiZid(koordZida, tipZida) == True):
+        if(proveriDaLiZidBlokiraStart(koordZida, tipZida, X1)):
+            print("Ne mozete ovde postaviti zid, blokiran je X1")
+            return -1
+        elif(proveriDaLiZidBlokiraStart(koordZida, tipZida, X2)):
+            print("Ne mozete ovde postaviti zid, blokiran je X2")
+            return -1
+        elif(proveriDaLiZidBlokiraStart(koordZida, tipZida, O1)):
+            print("Ne mozete ovde postaviti zid, blokiran je O1")
+            return -1
+        elif(proveriDaLiZidBlokiraStart(koordZida, tipZida, O2)):
+            print("Ne mozete ovde postaviti zid, blokiran je O2")
+            return -1
+        else:
+            return postaviZid(koordZida, tipZida)
+
     else:
         print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
-        resetujStanje()
+        return -1
 
 
-# poziva se u odigraj potez
+def zameniIgrace():
+    global trenutniIgrac
+    trenutniIgrac = not trenutniIgrac
+
 
 def skokIgraca(izabraniPesak: str, izabraniPesakKoord: tuple, sledeciSkokKoord: tuple):
     global X1, X2, O1, O2
-    if(izabraniPesak=="X1"):
-        X1=sledeciSkokKoord
-    elif(izabraniPesak=="X2"):
-        X2=sledeciSkokKoord
-    elif(izabraniPesak=="O1"):
-        O1=sledeciSkokKoord
-    elif(izabraniPesak=="O2"):
-        O2=sledeciSkokKoord
-    
+    if(izabraniPesak == "X1"):
+        X1 = sledeciSkokKoord
+    elif(izabraniPesak == "X2"):
+        X2 = sledeciSkokKoord
+    elif(izabraniPesak == "O1"):
+        O1 = sledeciSkokKoord
+    elif(izabraniPesak == "O2"):
+        O2 = sledeciSkokKoord
+
     # pomeranje pesaka
     matPolja[izabraniPesakKoord[0]][izabraniPesakKoord[1]] = '0'
     matPolja[sledeciSkokKoord[0]][sledeciSkokKoord[1]] = izabraniPesak
-
-
 
     if(proveriKrajIgre(sledeciSkokKoord) == True):
         return 1
@@ -580,12 +847,20 @@ def postaviZid(koordPolja: tuple, tipZida: str):
                 matZidovi[2*x+2][y] = "="
                 matZidovi[2*x+2][y+1] = "="
                 brHorizontalnihZidovaX = brHorizontalnihZidovaX-1
+                return 1
+            else:
+                print("Nemate vise horizontalnih zidova")
+                return -1
         elif(tipZida == "V"):
             if(brVertikalnihZidovaX > 0):
                 vZidovi.append(koordPolja)
                 matZidovi[2*x+1][y+1] = chr(0x01C1)
                 matZidovi[2*x+3][y+1] = chr(0x01C1)
                 brVertikalnihZidovaX = brVertikalnihZidovaX-1
+                return 1
+            else:
+                print("Nemate vise vertikalnih zidova")
+                return -1
 
     elif(trenutniIgrac == False):
         if(tipZida == "H"):
@@ -594,12 +869,20 @@ def postaviZid(koordPolja: tuple, tipZida: str):
                 matZidovi[2*x+2][y] = "="
                 matZidovi[2*x+2][y+1] = "="
                 brHorizontalnihZidovaO = brHorizontalnihZidovaO-1
+                return 1
+            else:
+                print("Nemate vise horizontalnih zidova")
+                return -1
         elif(tipZida == "V"):
             if(brVertikalnihZidovaO > 0):
                 vZidovi.append(koordPolja)
                 matZidovi[2*x+1][y+1] = chr(0x01C1)
                 matZidovi[2*x+3][y+1] = chr(0x01C1)
                 brVertikalnihZidovaO = brVertikalnihZidovaO-1
+                return 1
+            else:
+                print("Nemate vise vertikalnih zidova")
+                return -1
 
 
 def prikaziIgru():
@@ -673,6 +956,22 @@ def vratiO1():
 
 def vratiO2():
     return O2
+
+
+def vratiBrHorizontalnihZidovaX():
+    return brHorizontalnihZidovaX
+
+
+def vratiBrVertikalnihZidovaX():
+    return brVertikalnihZidovaX
+
+
+def vratiBrHorizontalnihZidovaO():
+    return brHorizontalnihZidovaO
+
+
+def vratiBrVertikalnihZidovaO():
+    return brVertikalnihZidovaO
 
 
 def h_function(trenutnaPozicija: tuple, ciljnaPozicija1: tuple, ciljnaPozicija2: tuple):
@@ -854,6 +1153,11 @@ def oboriZid(koordPolja: tuple, tipZida: str):
 
 
 def sacuvajStanje():
+    global X1, X2, O1, O2
+    global stariX1, stariX2, stariO1, stariO2
+    global staribrVertikalnihZidovaX, staribrHorizontalnihZidovaX, staribrVertikalnihZidovaO, staribrHorizontalnihZidovaO
+    global brVertikalnihZidovaX, brHorizontalnihZidovaX, brVertikalnihZidovaO, brHorizontalnihZidovaO
+    global matPolja, matZidovi, hZidovi, vZidovi, starimatPolja, starimatZidovi, starihZidovi, starivZidovi
     stariX1 = X1
     stariX2 = X2
     stariO1 = O1
@@ -871,6 +1175,11 @@ def sacuvajStanje():
 
 
 def resetujStanje():
+    global X1, X2, O1, O2
+    global stariX1, stariX2, stariO1, stariO2
+    global staribrVertikalnihZidovaX, staribrHorizontalnihZidovaX, staribrVertikalnihZidovaO, staribrHorizontalnihZidovaO
+    global brVertikalnihZidovaX, brHorizontalnihZidovaX, brVertikalnihZidovaO, brHorizontalnihZidovaO
+    global matPolja, matZidovi, hZidovi, vZidovi, starimatPolja, starimatZidovi, starihZidovi, starivZidovi
     X1 = stariX1
     X2 = stariX2
     O1 = stariO1
