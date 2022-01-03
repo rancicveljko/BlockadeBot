@@ -157,6 +157,14 @@ def proveriSlobodnoMesto(sledeciSkok: tuple) -> bool:
 
 
 def proveriMozeLiZid(koordPolja: tuple, tipZida: str) -> bool:
+    global brZidovaX, brZidovaO, trenutniIgrac
+
+    # #provera da li igrac ima zidove na raspolaganju
+    # if trenutniIgrac == True and brZidovaX == 0:
+    #     return False
+    # elif trenutniIgrac == False and brZidovaO == 0:
+    #     return False
+
     n = len(matPolja[0])
     m = len(matPolja)
     # da li je u opsegu table
@@ -165,26 +173,34 @@ def proveriMozeLiZid(koordPolja: tuple, tipZida: str) -> bool:
     # za Horizontalni
     if(tipZida == 'H'):
         if(koordPolja in hZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
         # da li ima horizontalnog zida vezano za polje s leve strane
         if((koordPolja[0], koordPolja[1]-1) in hZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
         # da li ima horizontalnog zida vezano za polje s desne strane
         if((koordPolja[0], koordPolja[1]+1) in hZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
         # da li je postavljen njegov vertikalni zid
         if((koordPolja[0], koordPolja[1]) in vZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
     # za Vertikalni
     elif(tipZida == 'V'):
         if(koordPolja in vZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
         if((koordPolja[0]-1, koordPolja[1]) in vZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
         if((koordPolja[0]+1, koordPolja[1]) in vZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
         # da li je postavljen njegov horizontalni zid
         if((koordPolja[0], koordPolja[1]) in hZidovi):
+            print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
             return False
     return True
 
@@ -308,7 +324,7 @@ def unosPocetnihParametara(m: int, n: int, maxZidova: int, X1Start: tuple(), X2S
     global X1, X2, O1, O2, brZidovaX, brZidovaO, matPolja, matZidovi
     global startX1, startX2, startO1, startO2
     brZidovaX = maxZidova // 2
-    brZidovaO = maxZidova // 2 
+    brZidovaO = maxZidova // 2
 
     # 0 su inicijalno prazna polja
     # X1 je prva figura igraca X
@@ -580,10 +596,11 @@ def testGame(pozicijePesakaX: list, pozicijePesakaO: list, pozicijeHZidova: list
 # poziva se u odigraj potez
 
 def odigrajPotezPesak(pesak: str, sledeciSkokSmer: str):
-    global trenutniIgrac
+    global trenutniIgrac, brZidovaO, brZidovaX
     izabraniPesakKoord = tuple()
     izabraniPesak = ''
     if(trenutniIgrac == True):
+        print("Ostalo Vam je jos ", brZidovaX, " zidova")
         if(pesak == '1'):
             izabraniPesakKoord = X1
             izabraniPesak = 'X1'
@@ -591,6 +608,7 @@ def odigrajPotezPesak(pesak: str, sledeciSkokSmer: str):
             izabraniPesakKoord = X2
             izabraniPesak = 'X2'
     else:
+        print("Ostalo Vam je jos ", brZidovaO, " zidova")
         if(pesak == '1'):
             izabraniPesakKoord = O1
             izabraniPesak = 'O1'
@@ -802,10 +820,10 @@ def odigrajPotezZid(tipZida: str, koordZida: tuple):
             print("Ne mozete ovde postaviti zid, blokiran je O2")
             return -1
         else:
-            return postaviZid(koordZida, tipZida)
+            postaviZid(koordZida, tipZida)
+            return 1
 
     else:
-        print("Ne mozete ovde postaviti zid, morate odigrati novi potez")
         return -1
 
 
@@ -839,40 +857,28 @@ def postaviZid(koordPolja: tuple, tipZida: str):
     x = koordPolja[0]
     y = koordPolja[1]
     if(trenutniIgrac == True):
-        if(brZidovaX > 0):
-            if(tipZida == "H"):
-                hZidovi.append(koordPolja)
-                matZidovi[2*x+2][y] = "="
-                matZidovi[2*x+2][y+1] = "="
-                brZidovaX = brZidovaX-1
-                return 1
-            elif(tipZida == "V"):
-                vZidovi.append(koordPolja)
-                matZidovi[2*x+1][y+1] = chr(0x01C1)
-                matZidovi[2*x+3][y+1] = chr(0x01C1)
-                brZidovaX = brZidovaX-1
-                return 1
-        else:
-            print("Igrac X - Nemate vise zidova")
-            return -1
+        if(tipZida == "H"):
+            hZidovi.append(koordPolja)
+            matZidovi[2*x+2][y] = "="
+            matZidovi[2*x+2][y+1] = "="
+            brZidovaX = brZidovaX-1
+        elif(tipZida == "V"):
+            vZidovi.append(koordPolja)
+            matZidovi[2*x+1][y+1] = chr(0x01C1)
+            matZidovi[2*x+3][y+1] = chr(0x01C1)
+            brZidovaX = brZidovaX-1
 
     elif(trenutniIgrac == False):
-        if(brZidovaO):
-            if(tipZida == "H"):
-                hZidovi.append(koordPolja)
-                matZidovi[2*x+2][y] = "="
-                matZidovi[2*x+2][y+1] = "="
-                brZidovaO = brZidovaO-1
-                return 1
-            elif(tipZida == "V"):
-                vZidovi.append(koordPolja)
-                matZidovi[2*x+1][y+1] = chr(0x01C1)
-                matZidovi[2*x+3][y+1] = chr(0x01C1)
-                brZidovaO = brZidovaO-1
-                return 1
-        else:
-            print("Igrac O - Nemate vise zidova")
-            return -1
+        if(tipZida == "H"):
+            hZidovi.append(koordPolja)
+            matZidovi[2*x+2][y] = "="
+            matZidovi[2*x+2][y+1] = "="
+            brZidovaO = brZidovaO-1
+        elif(tipZida == "V"):
+            vZidovi.append(koordPolja)
+            matZidovi[2*x+1][y+1] = chr(0x01C1)
+            matZidovi[2*x+3][y+1] = chr(0x01C1)
+            brZidovaO = brZidovaO-1
 
 
 def prikaziIgru():
@@ -1100,41 +1106,6 @@ def a_star(pocetnaPozicija: tuple):
     #     path.reverse()
     # return path
 
-# Obori zid valjda ne koristimo nigde, zato nigde nisam menjala brzidova
-
-
-def oboriZid(koordPolja: tuple, tipZida: str):
-    global brHorizontalnihZidovaX, brHorizontalnihZidovaO, brVertikalnihZidovaO, brVertikalnihZidovaX
-    x = koordPolja[0]
-    y = koordPolja[1]
-    if(trenutniIgrac == True):
-        if(tipZida == "H"):
-            if(brHorizontalnihZidovaX > 0):
-                hZidovi.append(koordPolja)
-                matZidovi[2*x+2][y] = "-"
-                matZidovi[2*x+2][y+1] = "-"
-                brHorizontalnihZidovaX = brHorizontalnihZidovaX+1
-        elif(tipZida == "V"):
-            if(brVertikalnihZidovaX > 0):
-                vZidovi.append(koordPolja)
-                matZidovi[2*x+1][y+1] = '|'
-                matZidovi[2*x+3][y+1] = '|'
-                brVertikalnihZidovaX = brVertikalnihZidovaX+1
-
-    elif(trenutniIgrac == False):
-        if(tipZida == "H"):
-            if(brHorizontalnihZidovaO > 0):
-                hZidovi.append(koordPolja)
-                matZidovi[2*x+2][y] = "-"
-                matZidovi[2*x+2][y+1] = "-"
-                brHorizontalnihZidovaO = brHorizontalnihZidovaO+1
-        elif(tipZida == "V"):
-            if(brVertikalnihZidovaO > 0):
-                vZidovi.append(koordPolja)
-                matZidovi[2*x+1][y+1] = '|'
-                matZidovi[2*x+3][y+1] = '|'
-                brVertikalnihZidovaO = brVertikalnihZidovaO+1
-
 
 def sacuvajStanje():
     global X1, X2, O1, O2
@@ -1174,4 +1145,110 @@ def resetujStanje():
     matZidovi = starimatZidovi.copy()
     hZidovi = starihZidovi.copy()
     vZidovi = starivZidovi.copy()
+# endregion
+# region alfabeta
+
+
+def proceni_stanje(stanje: tuple):
+    global startX1, startX2, startO1, startO2, trenutniIgrac
+    if(trenutniIgrac==True):
+        return h_function(stanje, startO1, startO2)
+    else: 
+        return h_function(stanje, startX1, startX2)
+
+
+def nova_stanja(stanje: tuple):
+    return get_destinations(stanje)
+
+
+def max_value(stanje, dubina, alpha, beta):
+    if dubina == 0:
+        return (stanje, proceni_stanje(stanje))
+    else:
+        for s in nova_stanja(stanje):
+            alpha = max(alpha, min_value(s, dubina - 1,
+                        alpha, beta), key=lambda x: x[1])
+        if alpha[1] >= beta[1]:
+            return beta
+    return alpha
+
+
+def min_value(stanje, dubina, alpha, beta):
+    if dubina == 0:
+        return (stanje, proceni_stanje(stanje))
+    else:
+        for s in nova_stanja(stanje):
+            beta = min(beta, max_value(s, dubina - 1,
+                       alpha, beta), key=lambda x: x[1])
+        if beta[1] <= alpha[1]:
+            return alpha
+    return beta
+
+
+def alfabeta(stanje1, stanje2, dubina, moj_potez):
+    if moj_potez:
+        alpha1 = (stanje1, -99999999)
+        beta1 = (stanje1, 99999999)
+        alpha2 = (stanje2, -99999999)
+        beta2 = (stanje2, 99999999)
+
+        prviPesak=max_value(stanje1, dubina, alpha1, beta1)
+        drugiPesak=max_value(stanje2, dubina, alpha2, beta2)
+
+        if(prviPesak[1]>drugiPesak[1]):
+            #Vraca se destinacija skoka
+            return (prviPesak[0], "1")
+        else:
+            return (drugiPesak[0], "2")
+    else:
+        alpha1 = (stanje1, -99999999)
+        beta1 = (stanje1, 99999999)
+        alpha2 = (stanje2, -99999999)
+        beta2 = (stanje2, 99999999)
+
+        prviPesak=min_value(stanje1, dubina, alpha1, beta1)
+        drugiPesak=min_value(stanje2, dubina, alpha2, beta2)
+
+        if(prviPesak[1]>drugiPesak[1]):
+            #Vraca se destinacija skoka
+            return (prviPesak[0], "1")
+        else:
+            return (drugiPesak[0], "2")
+
+def odrediSmerSkokaBota(sledecaKoodinataPesaka: tuple, pesak: str):
+    global trenutniIgrac, X1, X2, O1, O2
+    izabraniPesakKoord = tuple()
+    izabraniPesak = ''
+    if(trenutniIgrac == True):
+        if(pesak == '1'):
+            izabraniPesakKoord = X1
+            izabraniPesak = 'X1'
+        elif(pesak == '2'):
+            izabraniPesakKoord = X2
+            izabraniPesak = 'X2'
+    else:
+        if(pesak == '1'):
+            izabraniPesakKoord = O1
+            izabraniPesak = 'O1'
+        elif(pesak == '2'):
+            izabraniPesakKoord = O2
+            izabraniPesak = 'O2'
+    if(izabraniPesakKoord[0]==sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]>sledecaKoodinataPesaka[1]): 
+        return "levo"
+    elif(izabraniPesakKoord[0]==sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]<sledecaKoodinataPesaka[1]):
+        return "desno"
+    elif(izabraniPesakKoord[0]>sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]==sledecaKoodinataPesaka[1]):
+        return "gore"
+    elif(izabraniPesakKoord[0]<sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]==sledecaKoodinataPesaka[1]):
+        return "dole"
+    elif(izabraniPesakKoord[0]>sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]>sledecaKoodinataPesaka[1]):
+        return "gorelevo"
+    elif(izabraniPesakKoord[0]<sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]>sledecaKoodinataPesaka[1]):
+        return "dolelevo"
+    elif(izabraniPesakKoord[0]>sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]<sledecaKoodinataPesaka[1]):
+        return "goredesno"
+    elif(izabraniPesakKoord[0]<sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]<sledecaKoodinataPesaka[1]):
+        return "doledesno"
+
+
 # endregion
