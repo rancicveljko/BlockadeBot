@@ -14,10 +14,8 @@ X2 = tuple()
 O1 = tuple()
 O2 = tuple()
 # pamti se broj preostalih zidova
-brVertikalnihZidovaX = 0
-brHorizontalnihZidovaX = 0
-brVertikalnihZidovaO = 0
-brHorizontalnihZidovaO = 0
+brZidovaX = 0
+brZidovaO = 0
 # trenutni izgled matrica polja i zidova
 matPolja = []
 matZidovi = []
@@ -33,10 +31,8 @@ stariX2: tuple
 stariO1: tuple
 stariO2: tuple
 # pamti se broj preostalih zidova
-staribrVertikalnihZidovaX = 0
-staribrHorizontalnihZidovaX = 0
-staribrVertikalnihZidovaO = 0
-staribrHorizontalnihZidovaO = 0
+staribrZidovaX = 0
+staribrZidovaO = 0
 # trenutni izgled matrica polja i zidova
 starimatPolja = []
 starimatZidovi = []

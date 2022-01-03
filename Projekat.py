@@ -74,7 +74,7 @@ def main():
         if potezPesak == -1:
             continue
 
-        while(vratiBrHorizontalnihZidovaX() + vratiBrVertikalnihZidovaX() + vratiBrHorizontalnihZidovaO() + vratiBrVertikalnihZidovaO() > 0):
+        while(vratiBrZidovaX() + vratiBrZidovaO() > 0):
             print("Potez zida: tip_zida koordinate_zida\n")
             print("Unesite potez zida:")
 
@@ -94,7 +94,6 @@ def main():
                 continue
             else:
                 break
-
 
         zameniIgrace()
 

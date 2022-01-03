@@ -305,12 +305,10 @@ def proveriDaLiZidBlokiraStart(pocPozicijaZida: tuple, tipZida: str, izabraniPes
 
 
 def unosPocetnihParametara(m: int, n: int, maxZidova: int, X1Start: tuple(), X2Start: tuple()):
-    global X1, X2, O1, O2, brVertikalnihZidovaX, brHorizontalnihZidovaX, brVertikalnihZidovaO, brHorizontalnihZidovaO, matPolja, matZidovi
+    global X1, X2, O1, O2, brZidovaX, brZidovaO, matPolja, matZidovi
     global startX1, startX2, startO1, startO2
-    brVertikalnihZidovaX = maxZidova // 4
-    brHorizontalnihZidovaX = maxZidova // 4
-    brVertikalnihZidovaO = maxZidova // 4
-    brHorizontalnihZidovaO = maxZidova // 4
+    brZidovaX = maxZidova // 2
+    brZidovaO = maxZidova // 2 
 
     # 0 su inicijalno prazna polja
     # X1 je prva figura igraca X
@@ -837,52 +835,44 @@ def skokIgraca(izabraniPesak: str, izabraniPesakKoord: tuple, sledeciSkokKoord: 
 
 
 def postaviZid(koordPolja: tuple, tipZida: str):
-    global brHorizontalnihZidovaX, brHorizontalnihZidovaO, brVertikalnihZidovaO, brVertikalnihZidovaX
+    global brZidovaX, brZidovaO
     x = koordPolja[0]
     y = koordPolja[1]
     if(trenutniIgrac == True):
-        if(tipZida == "H"):
-            if(brHorizontalnihZidovaX > 0):
+        if(brZidovaX > 0):
+            if(tipZida == "H"):
                 hZidovi.append(koordPolja)
                 matZidovi[2*x+2][y] = "="
                 matZidovi[2*x+2][y+1] = "="
-                brHorizontalnihZidovaX = brHorizontalnihZidovaX-1
+                brZidovaX = brZidovaX-1
                 return 1
-            else:
-                print("Nemate vise horizontalnih zidova")
-                return -1
-        elif(tipZida == "V"):
-            if(brVertikalnihZidovaX > 0):
+            elif(tipZida == "V"):
                 vZidovi.append(koordPolja)
                 matZidovi[2*x+1][y+1] = chr(0x01C1)
                 matZidovi[2*x+3][y+1] = chr(0x01C1)
-                brVertikalnihZidovaX = brVertikalnihZidovaX-1
+                brZidovaX = brZidovaX-1
                 return 1
-            else:
-                print("Nemate vise vertikalnih zidova")
-                return -1
+        else:
+            print("Igrac X - Nemate vise zidova")
+            return -1
 
     elif(trenutniIgrac == False):
-        if(tipZida == "H"):
-            if(brHorizontalnihZidovaO > 0):
+        if(brZidovaO):
+            if(tipZida == "H"):
                 hZidovi.append(koordPolja)
                 matZidovi[2*x+2][y] = "="
                 matZidovi[2*x+2][y+1] = "="
-                brHorizontalnihZidovaO = brHorizontalnihZidovaO-1
+                brZidovaO = brZidovaO-1
                 return 1
-            else:
-                print("Nemate vise horizontalnih zidova")
-                return -1
-        elif(tipZida == "V"):
-            if(brVertikalnihZidovaO > 0):
+            elif(tipZida == "V"):
                 vZidovi.append(koordPolja)
                 matZidovi[2*x+1][y+1] = chr(0x01C1)
                 matZidovi[2*x+3][y+1] = chr(0x01C1)
-                brVertikalnihZidovaO = brVertikalnihZidovaO-1
+                brZidovaO = brZidovaO-1
                 return 1
-            else:
-                print("Nemate vise vertikalnih zidova")
-                return -1
+        else:
+            print("Igrac O - Nemate vise zidova")
+            return -1
 
 
 def prikaziIgru():
@@ -958,20 +948,12 @@ def vratiO2():
     return O2
 
 
-def vratiBrHorizontalnihZidovaX():
-    return brHorizontalnihZidovaX
+def vratiBrZidovaX():
+    return brZidovaX
 
 
-def vratiBrVertikalnihZidovaX():
-    return brVertikalnihZidovaX
-
-
-def vratiBrHorizontalnihZidovaO():
-    return brHorizontalnihZidovaO
-
-
-def vratiBrVertikalnihZidovaO():
-    return brVertikalnihZidovaO
+def vratiBrZidovaO():
+    return brZidovaO
 
 
 def h_function(trenutnaPozicija: tuple, ciljnaPozicija1: tuple, ciljnaPozicija2: tuple):
@@ -1118,6 +1100,8 @@ def a_star(pocetnaPozicija: tuple):
     #     path.reverse()
     # return path
 
+# Obori zid valjda ne koristimo nigde, zato nigde nisam menjala brzidova
+
 
 def oboriZid(koordPolja: tuple, tipZida: str):
     global brHorizontalnihZidovaX, brHorizontalnihZidovaO, brVertikalnihZidovaO, brVertikalnihZidovaX
@@ -1155,18 +1139,16 @@ def oboriZid(koordPolja: tuple, tipZida: str):
 def sacuvajStanje():
     global X1, X2, O1, O2
     global stariX1, stariX2, stariO1, stariO2
-    global staribrVertikalnihZidovaX, staribrHorizontalnihZidovaX, staribrVertikalnihZidovaO, staribrHorizontalnihZidovaO
-    global brVertikalnihZidovaX, brHorizontalnihZidovaX, brVertikalnihZidovaO, brHorizontalnihZidovaO
+    global staribrZidovaO, staribrZidovaX
+    global brZidovaX, brZidovaO
     global matPolja, matZidovi, hZidovi, vZidovi, starimatPolja, starimatZidovi, starihZidovi, starivZidovi
     stariX1 = X1
     stariX2 = X2
     stariO1 = O1
     stariO2 = O2
 
-    staribrVertikalnihZidovaX = brVertikalnihZidovaX
-    staribrHorizontalnihZidovaX = brHorizontalnihZidovaX
-    staribrVertikalnihZidovaO = brVertikalnihZidovaO
-    staribrHorizontalnihZidovaO = brHorizontalnihZidovaO
+    staribrZidovaX = brZidovaX
+    staribrZidovaO = brZidovaO
 
     starimatPolja = matPolja.copy()
     starimatZidovi = matZidovi.copy()
@@ -1177,18 +1159,16 @@ def sacuvajStanje():
 def resetujStanje():
     global X1, X2, O1, O2
     global stariX1, stariX2, stariO1, stariO2
-    global staribrVertikalnihZidovaX, staribrHorizontalnihZidovaX, staribrVertikalnihZidovaO, staribrHorizontalnihZidovaO
-    global brVertikalnihZidovaX, brHorizontalnihZidovaX, brVertikalnihZidovaO, brHorizontalnihZidovaO
+    global staribrZidovaO, staribrZidovaX
+    global brZidovaX, brZidovaO
     global matPolja, matZidovi, hZidovi, vZidovi, starimatPolja, starimatZidovi, starihZidovi, starivZidovi
     X1 = stariX1
     X2 = stariX2
     O1 = stariO1
     O2 = stariO2
 
-    brVertikalnihZidovaX = staribrVertikalnihZidovaX
-    brHorizontalnihZidovaX = staribrHorizontalnihZidovaX
-    brVertikalnihZidovaO = staribrVertikalnihZidovaO
-    brHorizontalnihZidovaO = staribrHorizontalnihZidovaO
+    brZidovaX = staribrZidovaX
+    brZidovaO = staribrZidovaO
 
     matPolja = starimatPolja.copy()
     matZidovi = starimatZidovi.copy()
