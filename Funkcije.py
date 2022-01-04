@@ -802,7 +802,6 @@ def odigrajPotezPesak(pesak: str, sledeciSkokSmer: str):
             return -1
     return rezSkoka
 
-
 def odigrajPotezZid(tipZida: str, koordZida: tuple):
     global X1, X2, O1, O2, trenutniIgrac
 
@@ -922,6 +921,31 @@ def get_available_walls():
                 listaVertikalnihZidova.append((i, j))
     return listaHorizontalnihZidova, listaVertikalnihZidova
 
+
+def odigrajPotezBot():
+    global trenutniIgrac, O1, O2, X1, X2, brZidovaX, brZidovaO
+    if(trenutniIgrac == True):
+        trenutniPesak1 = X1
+        trenutniPesak2 = X2
+        protivnickiPesak1=O1
+        protivnickiPesak2=O2
+        trenutniBrZidova = brZidovaX
+    else:
+        trenutniPesak1 = O1
+        trenutniPesak2 = O2
+        protivnickiPesak1=X1
+        protivnickiPesak2=X2
+        trenutniBrZidova = brZidovaO
+
+    # rez: 0:sledeca koordinata, 1:pesak (str), 2:trenutna pozicija pesaka
+    rezAlfaBeta = alfabeta(trenutniPesak1, trenutniPesak2, 3, trenutniIgrac)
+    smerSkoka = odrediSmerSkokaBota(rezAlfaBeta[0], rezAlfaBeta[1])
+    rezPesak = odigrajPotezPesak(rezAlfaBeta[1], smerSkoka)
+    if(trenutniBrZidova > 0):
+        rezAlfaBeta=alfabeta(protivnickiPesak1, protivnickiPesak2, 3, not trenutniIgrac)
+        (zidKoord, tipZida) = odrediPozicijuZida(rezAlfaBeta[2], rezAlfaBeta[0], rezAlfaBeta[1])
+        rezZid = odigrajPotezZid(tipZida, zidKoord)
+    return rezPesak, rezZid
 # endregion
 # region Helperi
 
@@ -967,7 +991,7 @@ def h_function(trenutnaPozicija: tuple, ciljnaPozicija1: tuple, ciljnaPozicija2:
                       ** 2+(ciljnaPozicija1[1]-trenutnaPozicija[1])**2)
     hVrednost2 = sqrt((ciljnaPozicija2[0]-trenutnaPozicija[0])
                       ** 2+(ciljnaPozicija2[1]-trenutnaPozicija[1])**2)
-    return hVrednost1 if hVrednost1 > hVrednost2 else hVrednost2
+    return hVrednost1 if hVrednost1 < hVrednost2 else hVrednost2
 
 
 def get_destinations(trenutnaPozicija: tuple):
@@ -1145,75 +1169,18 @@ def resetujStanje():
     matZidovi = starimatZidovi.copy()
     hZidovi = starihZidovi.copy()
     vZidovi = starivZidovi.copy()
-# endregion
-# region alfabeta
 
 
-def proceni_stanje(stanje: tuple):
-    global startX1, startX2, startO1, startO2, trenutniIgrac
-    if(trenutniIgrac==True):
-        return h_function(stanje, startO1, startO2)
-    else: 
-        return h_function(stanje, startX1, startX2)
+def odrediKoordZida(trenutnaKoord: tuple, smerSkoka: str):
+    if smerSkoka == "dole" or smerSkoka == "desno" or smerSkoka == "doledesno":
+        return trenutnaKoord
+    elif smerSkoka == "levo" or smerSkoka == "dolelevo":
+        return (trenutnaKoord[0], trenutnaKoord[1]-1)
+    elif smerSkoka == "gorelevo":
+        return (trenutnaKoord[0]-1, trenutnaKoord[1]-1)
+    elif smerSkoka == "gore" or smerSkoka == "goredesno":
+        return (trenutnaKoord[0]-1, trenutnaKoord[1])
 
-
-def nova_stanja(stanje: tuple):
-    return get_destinations(stanje)
-
-
-def max_value(stanje, dubina, alpha, beta):
-    if dubina == 0:
-        return (stanje, proceni_stanje(stanje))
-    else:
-        for s in nova_stanja(stanje):
-            alpha = max(alpha, min_value(s, dubina - 1,
-                        alpha, beta), key=lambda x: x[1])
-        if alpha[1] >= beta[1]:
-            return beta
-    return alpha
-
-
-def min_value(stanje, dubina, alpha, beta):
-    if dubina == 0:
-        return (stanje, proceni_stanje(stanje))
-    else:
-        for s in nova_stanja(stanje):
-            beta = min(beta, max_value(s, dubina - 1,
-                       alpha, beta), key=lambda x: x[1])
-        if beta[1] <= alpha[1]:
-            return alpha
-    return beta
-
-
-def alfabeta(stanje1, stanje2, dubina, moj_potez):
-    if moj_potez:
-        alpha1 = (stanje1, -99999999)
-        beta1 = (stanje1, 99999999)
-        alpha2 = (stanje2, -99999999)
-        beta2 = (stanje2, 99999999)
-
-        prviPesak=max_value(stanje1, dubina, alpha1, beta1)
-        drugiPesak=max_value(stanje2, dubina, alpha2, beta2)
-
-        if(prviPesak[1]>drugiPesak[1]):
-            #Vraca se destinacija skoka
-            return (prviPesak[0], "1")
-        else:
-            return (drugiPesak[0], "2")
-    else:
-        alpha1 = (stanje1, -99999999)
-        beta1 = (stanje1, 99999999)
-        alpha2 = (stanje2, -99999999)
-        beta2 = (stanje2, 99999999)
-
-        prviPesak=min_value(stanje1, dubina, alpha1, beta1)
-        drugiPesak=min_value(stanje2, dubina, alpha2, beta2)
-
-        if(prviPesak[1]>drugiPesak[1]):
-            #Vraca se destinacija skoka
-            return (prviPesak[0], "1")
-        else:
-            return (drugiPesak[0], "2")
 
 def odrediSmerSkokaBota(sledecaKoodinataPesaka: tuple, pesak: str):
     global trenutniIgrac, X1, X2, O1, O2
@@ -1233,22 +1200,106 @@ def odrediSmerSkokaBota(sledecaKoodinataPesaka: tuple, pesak: str):
         elif(pesak == '2'):
             izabraniPesakKoord = O2
             izabraniPesak = 'O2'
-    if(izabraniPesakKoord[0]==sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]>sledecaKoodinataPesaka[1]): 
+    if(izabraniPesakKoord[0] == sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] > sledecaKoodinataPesaka[1]):
         return "levo"
-    elif(izabraniPesakKoord[0]==sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]<sledecaKoodinataPesaka[1]):
+    elif(izabraniPesakKoord[0] == sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] < sledecaKoodinataPesaka[1]):
         return "desno"
-    elif(izabraniPesakKoord[0]>sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]==sledecaKoodinataPesaka[1]):
+    elif(izabraniPesakKoord[0] > sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] == sledecaKoodinataPesaka[1]):
         return "gore"
-    elif(izabraniPesakKoord[0]<sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]==sledecaKoodinataPesaka[1]):
+    elif(izabraniPesakKoord[0] < sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] == sledecaKoodinataPesaka[1]):
         return "dole"
-    elif(izabraniPesakKoord[0]>sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]>sledecaKoodinataPesaka[1]):
+    elif(izabraniPesakKoord[0] > sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] > sledecaKoodinataPesaka[1]):
         return "gorelevo"
-    elif(izabraniPesakKoord[0]<sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]>sledecaKoodinataPesaka[1]):
+    elif(izabraniPesakKoord[0] < sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] > sledecaKoodinataPesaka[1]):
         return "dolelevo"
-    elif(izabraniPesakKoord[0]>sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]<sledecaKoodinataPesaka[1]):
+    elif(izabraniPesakKoord[0] > sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] < sledecaKoodinataPesaka[1]):
         return "goredesno"
-    elif(izabraniPesakKoord[0]<sledecaKoodinataPesaka[0] and izabraniPesakKoord[1]<sledecaKoodinataPesaka[1]):
+    elif(izabraniPesakKoord[0] < sledecaKoodinataPesaka[0] and izabraniPesakKoord[1] < sledecaKoodinataPesaka[1]):
         return "doledesno"
 
+
+def odrediPozicijuZida(trenutnaKoord: tuple, sledecaKoord: tuple, pesak: str):
+    tipZida = ""
+    razlikaX = abs(sledecaKoord[0] - trenutnaKoord[0])
+    razlikaY = abs(sledecaKoord[1]-trenutnaKoord[1])
+
+    if razlikaX > razlikaY:
+        tipZida = "H"
+    else:
+        tipZida = "V"
+
+    smerSkoka = odrediSmerSkokaBota(sledecaKoord, pesak)
+    zidKoord = odrediKoordZida(trenutnaKoord, smerSkoka)
+
+    return (zidKoord, tipZida)
+# endregion
+# region alfabeta
+
+
+def proceni_stanje_pesak(stanje: tuple):
+    global startX1, startX2, startO1, startO2, trenutniIgrac
+    if(trenutniIgrac == True):
+        return h_function(stanje, startO1, startO2)
+    else:
+        return h_function(stanje, startX1, startX2)
+
+
+def nova_stanja_pesak(stanje: tuple):
+    return get_destinations(stanje)
+
+
+def max_value_pesak(stanje, dubina, alpha, beta):
+    if dubina == 0:
+        return (stanje, proceni_stanje_pesak(stanje))
+    else:
+        for s in nova_stanja_pesak(stanje):
+            alpha = max(alpha, min_value_pesak(s, dubina - 1,
+                        alpha, beta), key=lambda x: x[1])
+        if alpha[1] >= beta[1]:
+            return beta
+    return alpha
+
+
+def min_value_pesak(stanje, dubina, alpha, beta):
+    if dubina == 0:
+        return (stanje, proceni_stanje_pesak(stanje))
+    else:
+        for s in nova_stanja_pesak(stanje):
+            beta = min(beta, max_value_pesak(s, dubina - 1,
+                       alpha, beta), key=lambda x: x[1])
+        if beta[1] <= alpha[1]:
+            return alpha
+    return beta
+
+
+def alfabeta(stanje1, stanje2, dubina, moj_potez):
+    if moj_potez:
+        alpha1 = (stanje1, -99999999)
+        beta1 = (stanje1, 99999999)
+        alpha2 = (stanje2, -99999999)
+        beta2 = (stanje2, 99999999)
+
+        prviPesak = max_value_pesak(stanje1, dubina, alpha1, beta1)
+        drugiPesak = max_value_pesak(stanje2, dubina, alpha2, beta2)
+
+        if(prviPesak[1] > drugiPesak[1]):
+            # Vraca se destinacija skoka
+            return (prviPesak[0], "1", stanje1)
+        else:
+            return (drugiPesak[0], "2", stanje2)
+    else:
+        alpha1 = (stanje1, -99999999)
+        beta1 = (stanje1, 99999999)
+        alpha2 = (stanje2, -99999999)
+        beta2 = (stanje2, 99999999)
+
+        prviPesak = min_value_pesak(stanje1, dubina, alpha1, beta1)
+        drugiPesak = min_value_pesak(stanje2, dubina, alpha2, beta2)
+
+        if(prviPesak[1] > drugiPesak[1]):
+            # Vraca se destinacija skoka
+            return (prviPesak[0], "1", stanje1)
+        else:
+            return (drugiPesak[0], "2", stanje2)
 
 # endregion
