@@ -132,7 +132,7 @@ def main2():
 
     while True:
         if(inputIgrac=="X"):
-            # coek potez
+            # covek potez
             trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
             print("Na potezu je: ", trenutniIgrac)
             print("Potez pesaka: broj_pesaka smer_skoka\n")
@@ -194,6 +194,7 @@ def main2():
             zameniIgrace()
 
         else:
+            # bot potez
             trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
             (potezPesak, potezZid) = odigrajPotezBot()
             
@@ -206,7 +207,7 @@ def main2():
 
             zameniIgrace()
 
-            # coek potez
+            # covek potez
             trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
             print("Na potezu je: ", trenutniIgrac)
             print("Potez pesaka: broj_pesaka smer_skoka\n")

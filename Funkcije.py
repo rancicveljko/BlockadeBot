@@ -1242,7 +1242,6 @@ def odrediPozicijuZida(trenutnaKoord: tuple, sledecaKoord: tuple, pesak: str):
     if zidKoord in lista:
         return (zidKoord, tipZida)
     else:
-        # seti se da promenis logiku ovamo
         return (lista[0], tipZida)
 
 
