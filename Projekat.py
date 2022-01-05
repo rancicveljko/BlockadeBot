@@ -126,80 +126,133 @@ def main2():
     koordinatePesakaX1 = tuple(map(int, args[3].split(",")))
     koordinatePesakaX2 = tuple(map(int, args[4].split(",")))
 
-    unosPocetnihParametara(
-        brojVrsta, brojKolona, ukupanBrojZidova, koordinatePesakaX1, koordinatePesakaX2)
+    unosPocetnihParametara(brojVrsta, brojKolona, ukupanBrojZidova, koordinatePesakaX1, koordinatePesakaX2)
 
     prikaziIgru()
 
     while True:
-        if inputIgrac == "O":
-            (potezPesak, potezZid) = odigrajPotezBot()
-            zameniIgrace()
-            if(potezPesak == 1):
-                prikaziIgru()
-                print("Kraj igre")
-                break
-            elif(potezPesak != -1 and potezZid != -1):
-                prikaziIgru()
+        if(inputIgrac=="X"):
+            # coek potez
+            trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
+            print("Na potezu je: ", trenutniIgrac)
+            print("Potez pesaka: broj_pesaka smer_skoka\n")
+            print("Unesite potez pesaka:")
+            potezPesak = 0
+            potezZid = 0
 
-        trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
-        print("Na potezu je: ", trenutniIgrac)
-        print("Potez pesaka: broj_pesaka smer_skoka\n")
-        print("Unesite potez pesaka:")
-        potezPesak = 0
-        potezZid = 0
-
-        inputPesakPotez = input()
-        if inputPesakPotez == "":
-            print("Unesite potez pesaka.")
-            continue
-        args = inputPesakPotez.split(" ")
-        brPesaka = args[0]
-        smerSkoka = args[1]
-        potezPesak = odigrajPotezPesak(brPesaka, smerSkoka)
-        if potezPesak == -1:
-            continue
-
-        while(vratiBrZidovaX() + vratiBrZidovaO() > 0):
-            print("Potez zida: tip_zida koordinate_zida\n")
-            print("Unesite potez zida:")
-
-            inputZidPotez = input()
+            inputPesakPotez = input()
             if inputPesakPotez == "":
-                print("Unesite potez zida.")
+                print("Unesite potez pesaka.")
+                continue
+            args = inputPesakPotez.split(" ")
+            brPesaka = args[0]
+            smerSkoka = args[1]
+            potezPesak = odigrajPotezPesak(brPesaka, smerSkoka)
+            if potezPesak == -1:
                 continue
 
-            argsZida = inputZidPotez.split(" ")
-            tipZida = argsZida[0]
-            koordinateZida = tuple(map(int, argsZida[1].split(",")))
+            while(vratiBrZidovaX() + vratiBrZidovaO() > 0):
+                print("Potez zida: tip_zida koordinate_zida\n")
+                print("Unesite potez zida:")
 
-            sacuvajStanje()
-            potezZid = odigrajPotezZid(tipZida, koordinateZida)
-            if(potezZid == -1):
-                resetujStanje()
-                continue
-            else:
-                break
+                inputZidPotez = input()
+                if inputPesakPotez == "":
+                    print("Unesite potez zida.")
+                    continue
 
-        zameniIgrace()
+                argsZida = inputZidPotez.split(" ")
+                tipZida = argsZida[0]
+                koordinateZida = tuple(map(int, argsZida[1].split(",")))
 
-        if(potezPesak == 1):
-            prikaziIgru()
-            print("Kraj igre")
-            break
-        elif(potezPesak != -1 and potezZid != -1):
-            prikaziIgru()
+                sacuvajStanje()
+                potezZid = odigrajPotezZid(tipZida, koordinateZida)
+                if(potezZid == -1):
+                    resetujStanje()
+                    continue
+                else:
+                    break
 
-        ################
-        if(inputIgrac == "X"):
-            (potezPesak, potezZid) = odigrajPotezBot()
-            zameniIgrace()
             if(potezPesak == 1):
                 prikaziIgru()
-                print("Kraj igre")
+                print("Kraj igre, Pobednik je ", trenutniIgrac)
                 break
             elif(potezPesak != -1 and potezZid != -1):
                 prikaziIgru()
 
+            zameniIgrace()
+
+            # bot potez
+            trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
+            (potezPesak, potezZid) = odigrajPotezBot()
+            
+            if(potezPesak == 1):
+                prikaziIgru()
+                print("Kraj igre, Pobednik je ", trenutniIgrac)
+                break
+            elif(potezPesak != -1 and potezZid != -1):
+                prikaziIgru()
+            zameniIgrace()
+
+        else:
+            trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
+            (potezPesak, potezZid) = odigrajPotezBot()
+            
+            if(potezPesak == 1):
+                prikaziIgru()
+                print("Kraj igre, Pobednik je ", trenutniIgrac)
+                break
+            elif(potezPesak != -1 and potezZid != -1):
+                prikaziIgru()
+
+            zameniIgrace()
+
+            # coek potez
+            trenutniIgrac = "X" if vratiTrenutnogIgraca() else "O"
+            print("Na potezu je: ", trenutniIgrac)
+            print("Potez pesaka: broj_pesaka smer_skoka\n")
+            print("Unesite potez pesaka:")
+            potezPesak = 0
+            potezZid = 0
+
+            inputPesakPotez = input()
+            if inputPesakPotez == "":
+                print("Unesite potez pesaka.")
+                continue
+            args = inputPesakPotez.split(" ")
+            brPesaka = args[0]
+            smerSkoka = args[1]
+            potezPesak = odigrajPotezPesak(brPesaka, smerSkoka)
+            if potezPesak == -1:
+                continue
+
+            while(vratiBrZidovaX() + vratiBrZidovaO() > 0):
+                print("Potez zida: tip_zida koordinate_zida\n")
+                print("Unesite potez zida:")
+
+                inputZidPotez = input()
+                if inputPesakPotez == "":
+                    print("Unesite potez zida.")
+                    continue
+
+                argsZida = inputZidPotez.split(" ")
+                tipZida = argsZida[0]
+                koordinateZida = tuple(map(int, argsZida[1].split(",")))
+
+                sacuvajStanje()
+                potezZid = odigrajPotezZid(tipZida, koordinateZida)
+                if(potezZid == -1):
+                    resetujStanje()
+                    continue
+                else:
+                    break
+
+            if(potezPesak == 1):
+                prikaziIgru()
+                print("Kraj igre, Pobednik je ", trenutniIgrac)
+                break
+            elif(potezPesak != -1 and potezZid != -1):
+                prikaziIgru()
+
+            zameniIgrace()
 
 main2()
