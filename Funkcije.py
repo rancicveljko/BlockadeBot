@@ -608,7 +608,7 @@ def odigrajPotezPesak(pesak: str, sledeciSkokSmer: str):
             izabraniPesakKoord = X2
             izabraniPesak = 'X2'
     else:
-        print("Ostalo Vam je jos ", brZidovaO, " zidova")
+        print("Ostalo Vam je jos ", brZidovaO, " zida")
         if(pesak == '1'):
             izabraniPesakKoord = O1
             izabraniPesak = 'O1'
