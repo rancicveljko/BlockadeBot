@@ -998,15 +998,6 @@ def h_function(trenutnaPozicija: tuple, ciljnaPozicija1: tuple, ciljnaPozicija2:
                       ** 2+(ciljnaPozicija2[1]-trenutnaPozicija[1])**2)
     return 999999-hVrednost1 if hVrednost1 < hVrednost2 else 999999-hVrednost2
 
-def h_potez(trenutnaPozicija: tuple, ciljnaPozicija1: tuple, ciljnaPozicija2: tuple):
-    #if(trenutnaPozicija == ciljnaPozicija1 or trenutnaPozicija==ciljnaPozicija2):
-    #   return 0
-    hVrednost1 = sqrt((ciljnaPozicija1[0]-trenutnaPozicija[0])
-                      ** 2+(ciljnaPozicija1[1]-trenutnaPozicija[1])**2)
-    hVrednost2 = sqrt((ciljnaPozicija2[0]-trenutnaPozicija[0])
-                      ** 2+(ciljnaPozicija2[1]-trenutnaPozicija[1])**2)
-    return hVrednost1 if hVrednost1 > hVrednost2 else hVrednost2
-
 
 def get_destinations(trenutnaPozicija: tuple):
     global trenutniIgrac
